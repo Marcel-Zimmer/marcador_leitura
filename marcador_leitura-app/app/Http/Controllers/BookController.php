@@ -7,31 +7,18 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-public function serchaBookByName($name)
-    {
-        // Cria uma instância do modelo Book e faz a pesquisa
+public function serchaBookByName(Request $request)
+    {   
+        $searchTerm = $request->input('q'); // pega as informações digitadas no forumlario
+        $searchQuery = 'intitle:' . urlencode($searchTerm); //adiciona intitle antes das informações e tranforma a pesquisa para o tipo de pesquisa url 
+        $url = 'https://www.googleapis.com/books/v1/volumes?q=' . $searchQuery; //constroi a url inteira 
         $bookModel = new Book();
-        $books = $bookModel->searchBooks($name);
-
-        // Verifica se foram encontrados livros
+        $books = $bookModel->searchBooks($url);
+                
         if (count($books) > 0) {
-            // Se houver livros, cria um array de dados formatados para resposta
-            $formattedBooks = [];
-
-            foreach ($books as $book) {
-                // Acessa os dados de cada livro
-                $formattedBooks[] = [
-                    'title' => $book->title,
-                    'imagemLink' => $book->imagemLink
-                ];
-            }
-
-            // Retorna os dados formatados como JSON
-            return response()->json($formattedBooks);
-
-        }
-
-        // Se não encontrar livros, retorna uma mensagem dizendo que não há resultados
-        return response()->json(['message' => 'Nenhum livro encontrado.'], 404);
+            // Retorna a view 'books' com os dados dos livros
+            return response()->json($books);
+        } 
+        return [];
     }
 }

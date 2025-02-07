@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 
 
-route::get('/procurarLivro/{nameBook}', [BookController::class, 'serchaBookByName']);
+route::get('/searchBook/', [BookController::class, 'serchaBookByName'])->name('searchBook');
 
 Route::view('/', 'welcome');
 
