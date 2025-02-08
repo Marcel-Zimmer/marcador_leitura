@@ -1,9 +1,13 @@
 import './bootstrap';
 
+/*
 document.getElementById('searchForm').addEventListener('submit', function (e) {
     e.preventDefault(); // Impede o envio tradicional do formulário
-
+    const bookResultsDiv = document.getElementById('bookResults');
     const query = document.getElementById('searchInput').value; // Pega o valor digitado
+    if(query.trim().length === 0){
+        bookResultsDiv.innerHTML = '<p class="text-gray-500">Por favor digite o nome de um livro.</p>';
+    }
     sendSearchRequest(query); // Chama a função para enviar a requisição
 });
 
@@ -67,3 +71,4 @@ function sendSearchRequest(query) {
         console.error('Erro:', error); // Exibe erros no console
     });
 }
+    */
