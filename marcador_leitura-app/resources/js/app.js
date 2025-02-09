@@ -1,20 +1,19 @@
 import './bootstrap';
 
 document.getElementById('searchForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Impede o envio tradicional do formulário
+    e.preventDefault(); 
     const bookResultsDiv = document.getElementById('bookResults');
-    const query = document.getElementById('searchInput').value; // Pega o valor digitado
+    const query = document.getElementById('searchInput').value; 
+
     if(query.trim().length === 0){
         bookResultsDiv.innerHTML = '<p class="text-gray-500">Por favor digite o nome de um livro.</p>';
     }
-    sendSearchRequest(query); // Chama a função para enviar a requisição
+    sendSearchRequest(bookResultsDiv,query); // Chama a função para enviar a requisição
 });
 
-function sendSearchRequest(query) {
+function sendSearchRequest(bookResultsDiv,query) {
     const url = `/searchBook?q=${encodeURIComponent(query)}`; // Rota com query parameter
-    const bookResultsDiv = document.getElementById('bookResults');
     const newUrl = url.replace(/%20/g, '+');
-
 
     fetch(url, {
         method: 'GET', // Método HTTP
@@ -88,7 +87,50 @@ function addToReadingList(book) {
 }
 
 function addToReadList(book) {
-    // Aqui você pode fazer uma requisição AJAX para salvar no banco com Laravel
+    fetch(addNewBookRoute, {  // Use a função de rota do Laravel para gerar a URL
+        method: 'POST',  // Método da requisição
+        headers: {
+            'Content-Type': 'application/json',  // Tipo de conteúdo (JSON)
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  // Token CSRF
+        },
+        body: JSON.stringify(book)  // Dados que serão enviados - use 'book_id' ou ajuste conforme sua lógica no backend
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Abre uma nova aba no navegador
+        const newWindow = window.open('', '_blank'); // A segunda parte ('_blank') indica que será em uma nova aba
+    
+        // Verifica se a resposta contém dados
+        if (data) {
+            // Escreve os dados JSON na nova aba
+            newWindow.document.write('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+        } else {
+            newWindow.document.write('<p>Nenhum dado encontrado.</p>');
+        }
+    });
+    fetch(addBookToReadListRoute, {  // Use a função de rota do Laravel para gerar a URL
+        method: 'POST',  // Método da requisição
+        headers: {
+            'Content-Type': 'application/json',  // Tipo de conteúdo (JSON)
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  // Token CSRF
+        },
+        body: JSON.stringify(book)  // Dados que serão enviados - use 'book_id' ou ajuste conforme sua lógica no backend
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Abre uma nova aba no navegador
+        const newWindow = window.open('', '_blank'); // A segunda parte ('_blank') indica que será em uma nova aba
+    
+        // Verifica se a resposta contém dados
+        if (data) {
+            // Escreve os dados JSON na nova aba
+            newWindow.document.write('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+        } else {
+            newWindow.document.write('<p>Nenhum dado encontrado.</p>');
+        }
+    });
+
+
 }
     
 document.addEventListener("DOMContentLoaded", function () {
@@ -123,6 +165,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    let pageName = window.location.pathname.split("/").pop();
+    if (pageName === "getBooksRead") {
+        const url = `/booksRead`; // Rota com query parameter
+        const bookResultsDiv = document.getElementById('bookResults');
+    
+    
+        fetch(url, {
+            method: 'GET', // Método HTTP
+            headers: {
+                'Accept': 'application/json', // Define que você espera uma resposta JSON
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição: ' + response.statusText);
+            }
+            return response.json(); // Converte a resposta para JSON
+        })
+    .then(data => {
+        if (data.length > 0) {
+            addInformationsInView(bookResultsDiv,data)
+        } else {
+            bookResultsDiv.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
+        }
+    })
+        .catch(error => {
+            console.error('Erro:', error); // Exibe erros no console
+        });
+    }
+});
 function addInformationsInView(nameDiv, data){
             nameDiv.innerHTML = '';
 

@@ -26,10 +26,13 @@ class BookController extends Controller
             return response()->json("livro ja registrado");    
         }
         else{
+            
             $newbook = new Book();
             $newbook->fill($request->all());
+            
             $newbook -> save();
-            return response()->json("livro registrado");
+            return response()->json($newbook);
+            
         }
 
         

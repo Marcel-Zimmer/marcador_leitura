@@ -20,6 +20,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <!-- Dashboard -->
+                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <x-nav-link :href="route('getBooksRead')" :active="request()->routeIs('books')">
+                                {{ __('ListaDeLidos') }}
+                            </x-nav-link>
+                        </div>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -42,5 +52,6 @@
     <script>
         const addNewBookRoute = @json(route('addNewBook'));
         const addBookToReadingListRoute = @json(route('addBookToReadingList'));
+        const addBookToReadListRoute = @json(route('addBookToReadList'));
     </script>
 </x-app-layout>
