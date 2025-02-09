@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
 class Book extends Model
-{
-    protected $fillable = ['idBook','title','authors','publisher','publishedDate','description','pageCount','categories','smallThumbnail','thumbnail','language','price','currencyCode'];
+{   
     
+    protected $fillable = ['idBook','title','authors','publisher','publishedDate','description','pageCount','categories','smallThumbnail','thumbnail','language','price','currencyCode'];
+    protected $primaryKey = "idBook";
+    public $incrementing = false;
     private function getBooksFromApi($url){ // função responsável por consultar a api do google e retornar um json 
         $filterPortuguese = "&langRestrict=pt";
         $keyApi = "&key=AIzaSyCWyMf_m1IDlc2VBIjxQNGAaMn8JtJxODM";
@@ -41,7 +43,7 @@ class Book extends Model
                         'thumbnail' => $bookData['volumeInfo']['imageLinks']['thumbnail'] ?? ['Sem imagem'],
                         'language' => $bookData['volumeInfo']['language'] ?? ['Sem Linguagem'],
                         'price' => $bookData['saleInfo']['listPrice']['amount'] ??'Valor não informado',
-                        'currencyCode' => $bookData['saleInfo']['listPrice']['currencyCode'] ??'Código não informado',
+                        'currencyCode' => $bookData['saleInfo']['listPrice']['currencyCode'] ??'Código não informado'
 
                     ]);
                 }

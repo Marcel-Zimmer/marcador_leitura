@@ -1,9 +1,25 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <nav class="bg-white border-b border-gray-100 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <!-- Dashboard -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
+    
+                    <!-- 🔹 Nova Aba (Exemplo: "Livros") -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-4 sm:flex">
+                        <x-nav-link :href="route('searchBook')" :active="request()->routeIs('books')">
+                            {{ __('Lista') }}
+                        </x-nav-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -19,4 +35,8 @@
     <div id="bookResults" class="mt-6">
         
     </div>
+    <script>
+        const addNewBookRoute = @json(route('addNewBook'));
+        const addBookToReadingListRoute = @json(route('addBookToReadingList'));
+    </script>
 </x-app-layout>

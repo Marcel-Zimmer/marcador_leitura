@@ -5,6 +5,9 @@ use App\Http\Controllers\BookController;
 
 
 route::get('/searchBook/', [BookController::class, 'serchaBookByName'])->name('searchBook');
+route::post('/addNewBook/', [BookController::class,'addNewBook'])->name('addNewBook');
+route::post('/addBookToReadList/', [BookController::class,'addBookToReadList'])->name('addBookToReadList');
+route::post('/addBookToReadingList/', [BookController::class,'addBookToReadingList'])->name('addBookToReadingList');
 
 Route::view('/', 'welcome');
 

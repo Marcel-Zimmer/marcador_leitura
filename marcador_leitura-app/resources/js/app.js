@@ -1,6 +1,5 @@
 import './bootstrap';
 
-/*
 document.getElementById('searchForm').addEventListener('submit', function (e) {
     e.preventDefault(); // Impede o envio tradicional do formulário
     const bookResultsDiv = document.getElementById('bookResults');
@@ -15,7 +14,7 @@ function sendSearchRequest(query) {
     const url = `/searchBook?q=${encodeURIComponent(query)}`; // Rota com query parameter
     const bookResultsDiv = document.getElementById('bookResults');
     const newUrl = url.replace(/%20/g, '+');
-    console.log(newUrl)
+
 
     fetch(url, {
         method: 'GET', // Método HTTP
@@ -29,46 +28,97 @@ function sendSearchRequest(query) {
         }
         return response.json(); // Converte a resposta para JSON
     })
-    .then(data => {
-        if (data.length > 0) {
-            // Cria os cartões dos livros
-            bookResultsDiv.innerHTML = ''; // Limpa o "Carregando..."
-            data.forEach(book => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card bg-white p-4 rounded-lg shadow-md mb-4';
+.then(data => {
+    if (data.length > 0) {
+        // Limpa o "Carregando..."
+        bookResultsDiv.innerHTML = '';
 
-                const title = document.createElement('h2');
-                title.className = 'text-xl font-bold';
-                title.textContent = book.title;
-                bookCard.appendChild(title);
+        data.forEach(book => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card bg-white p-4 rounded-lg shadow-md mb-4';
 
-                const authors = document.createElement('p');
-                authors.className = 'text-gray-700';
-                authors.innerHTML = `<strong>Autor(es):</strong> ${book.authors}`;
-                bookCard.appendChild(authors);
+            // Título
+            const title = document.createElement('h2');
+            title.className = 'text-xl font-bold';
+            title.textContent = book.title;
+            bookCard.appendChild(title);
 
-                if (book.imagemLink !== 'Sem imagem') {
-                    const image = document.createElement('img');
-                    image.src = book.imagemLink;
-                    image.alt = `Capa do livro: ${book.title}`;
-                    image.className = 'mt-2 rounded';
-                    bookCard.appendChild(image);
-                } else {
-                    const noImage = document.createElement('p');
-                    noImage.className = 'text-gray-500';
-                    noImage.textContent = 'Sem imagem disponível';
-                    bookCard.appendChild(noImage);
-                }
+            // Autor(es)
+            const authors = document.createElement('p');
+            authors.className = 'text-gray-700';
+            authors.innerHTML = `<strong>Autor(es):</strong> ${book.authors}`;
+            bookCard.appendChild(authors);
 
-                bookResultsDiv.appendChild(bookCard);
-            });
-        } else {
-            // Exibe uma mensagem se não houver resultados
-            bookResultsDiv.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
-        }
-    })
+            // Imagem do livro
+            if (book.thumbnail !== 'Sem imagem') {
+                const image = document.createElement('img');
+                image.src = book.thumbnail;
+                image.alt = `Capa do livro: ${book.title}`;
+                image.className = 'mt-2 rounded';
+                bookCard.appendChild(image);
+            } else {
+                const noImage = document.createElement('p');
+                noImage.className = 'text-gray-500';
+                noImage.textContent = 'Sem imagem disponível';
+                bookCard.appendChild(noImage);
+            }
+
+            // Botões de ação
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'mt-4 flex space-x-2';
+
+            // Botão "Adicionar à lista de leitura"
+            const addToReadingListBtn = document.createElement('button');
+            addToReadingListBtn.className = 'bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-700';
+            addToReadingListBtn.textContent = 'Adicionar à lista de leitura';
+            addToReadingListBtn.onclick = () => addToReadingList(book);
+            buttonsDiv.appendChild(addToReadingListBtn);
+
+            // Botão "Adicionar à lista de lidos"
+            const addToReadListBtn = document.createElement('button');
+            addToReadListBtn.className = 'bg-green-500 text-black px-4 py-2 rounded hover:bg-green-700';
+            addToReadListBtn.textContent = 'Adicionar à lista de lidos';
+            addToReadListBtn.onclick = () => addToReadList(book);
+            buttonsDiv.appendChild(addToReadListBtn);
+
+            bookCard.appendChild(buttonsDiv);
+            bookResultsDiv.appendChild(bookCard);
+
+        });
+    } else {
+        bookResultsDiv.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
+    }
+})
     .catch(error => {
         console.error('Erro:', error); // Exibe erros no console
     });
 }
-    */
+
+function addToReadingList(book) {
+    fetch(addNewBookRoute, {  // Use a função de rota do Laravel para gerar a URL
+        method: 'POST',  // Método da requisição
+        headers: {
+            'Content-Type': 'application/json',  // Tipo de conteúdo (JSON)
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  // Token CSRF
+        },
+        body: JSON.stringify(book)  // Dados que serão enviados - use 'book_id' ou ajuste conforme sua lógica no backend
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Abre uma nova aba no navegador
+        const newWindow = window.open('', '_blank'); // A segunda parte ('_blank') indica que será em uma nova aba
+    
+        // Verifica se a resposta contém dados
+        if (data) {
+            // Escreve os dados JSON na nova aba
+            newWindow.document.write('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+        } else {
+            newWindow.document.write('<p>Nenhum dado encontrado.</p>');
+        }
+    })}
+
+function addToReadList(book) {
+    console.log(`Adicionando "${book.id}" à lista de lidos.`);
+    // Aqui você pode fazer uma requisição AJAX para salvar no banco com Laravel
+}
+    
