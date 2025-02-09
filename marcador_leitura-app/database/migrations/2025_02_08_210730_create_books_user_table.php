@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('id_book')->references('idBook')->on('books')->onDelete('cascade');
             $table->integer('note');
             $table->string('status');
-            $table->string('resume');
+            $table->text('resume');
         });
     }
 

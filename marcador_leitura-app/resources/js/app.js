@@ -115,10 +115,33 @@ function addToReadingList(book) {
         } else {
             newWindow.document.write('<p>Nenhum dado encontrado.</p>');
         }
-    })}
+    });
+    fetch(addBookToReadingListRoute, {  // Use a função de rota do Laravel para gerar a URL
+        method: 'POST',  // Método da requisição
+        headers: {
+            'Content-Type': 'application/json',  // Tipo de conteúdo (JSON)
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  // Token CSRF
+        },
+        body: JSON.stringify(book)  // Dados que serão enviados - use 'book_id' ou ajuste conforme sua lógica no backend
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Abre uma nova aba no navegador
+        const newWindow = window.open('', '_blank'); // A segunda parte ('_blank') indica que será em uma nova aba
+    
+        // Verifica se a resposta contém dados
+        if (data) {
+            // Escreve os dados JSON na nova aba
+            newWindow.document.write('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+        } else {
+            newWindow.document.write('<p>Nenhum dado encontrado.</p>');
+        }
+    });
+
+
+}
 
 function addToReadList(book) {
-    console.log(`Adicionando "${book.id}" à lista de lidos.`);
     // Aqui você pode fazer uma requisição AJAX para salvar no banco com Laravel
 }
     
