@@ -50,6 +50,8 @@
         
     </div>
     <script>
+        const deleteBookFromReadList = @json(route('removeBookReadList'));
+        const deleteBookFromReadingList = @json(route('removeBookReadingList'));
         const addNewBookRoute = @json(route('addNewBook'));
         const addBookToReadingListRoute = @json(route('addBookToReadingList'));
         const addBookToReadListRoute = @json(route('addBookToReadList'));

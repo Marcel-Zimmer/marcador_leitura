@@ -49,4 +49,19 @@ class BookUserController extends Controller
         }
         return response()->json($books);
     }
+    public function removeBookReadList(Request $request){
+        $userID = auth()->user()->id;
+        $bookUser = BookUser::where('id_user', $userID)->where('id_book',$request->idBook)->where('status','Read')->first();
+
+        //$bookUser->delete();
+        return response()->json("deu boa");
+    }
+    public function removeBookReadingList(Request $request){
+        $userID = auth()->user()->id;
+        $bookUser = BookUser::where('id_user', $userID)->where('id_book',$request->idBook)->where('status','Reading')->first();
+
+        //$bookUser->delete();
+        return response()->json("deu boa");
+        
+    }
 }

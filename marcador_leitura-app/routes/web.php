@@ -11,6 +11,8 @@ route::post('/addBookToReadList/', [BookUserController::class,'addBookToReadList
 route::post('/addBookToReadingList/', [BookUserController::class,'addBookToReadingList'])->name('addBookToReadingList');
 route::get('/booksToRead/', [BookUserController::class,'getBooksToRead'])->name('booksToRead');
 route::get('/booksRead/', [BookUserController::class,'getBooksRead'])->name('booksRead');
+route::post('/removeBookReadList/', [BookUserController::class,'removeBookReadList'])->name('removeBookReadList');
+route::post('/removeBookReadingList/', [BookUserController::class,'removeBookReadingList'])->name('removeBookReadingList');
 
 route::view('getBooksToRead','booksToRead')
     ->middleware(['auth', 'verified'])
