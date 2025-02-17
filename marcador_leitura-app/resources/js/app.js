@@ -27,28 +27,40 @@ function addToReadList(book) {
 function removeBookFromReadList(book){
     var url = "http://localhost:8000/removeBookReadList"
     sendPost(url, book);
+    refreshPageAfterDeleteReadList();
 }
 
 function removeBookFromReadingList(book){
     var url = "http://localhost:8000/removeBookReadingList"
     sendPost(url, book);
+    refreshPageAfterDeleteReadingList();
+    
+}
+
+function refreshPageAfterDeleteReadingList(){
+    const url = `/booksToRead`; // Rota com query parameter
+    const bookResultsDiv = document.getElementById('bookResults');
+    sendGet(url, bookResultsDiv)
+
+}
+
+function refreshPageAfterDeleteReadList(){
+    const url = `/booksRead`; // Rota com query parameter
+    const bookResultsDiv = document.getElementById('bookResults');
+    sendGet(url, bookResultsDiv)   
 }
     
 document.addEventListener("DOMContentLoaded", function () {
     let pageName = window.location.pathname.split("/").pop();
     if (pageName === "getBooksToRead") {
-        const url = `/booksToRead`; // Rota com query parameter
-        const bookResultsDiv = document.getElementById('bookResults');
-        sendGet(url, bookResultsDiv)
+        refreshPageAfterDeleteReadingList()
     }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
     let pageName = window.location.pathname.split("/").pop();
     if (pageName === "getBooksRead") {
-        const url = `/booksRead`; // Rota com query parameter
-        const bookResultsDiv = document.getElementById('bookResults');
-        sendGet(url, bookResultsDiv)
+        refreshPageAfterDeleteReadList()
     }
 });
 
@@ -178,7 +190,7 @@ function sendPost(route, book){
             const url = URL.createObjectURL(blob);
         
             // Abre a URL em uma nova guia
-            window.open(url, '_blank');
+            //window.open(url, '_blank');
         } else {
             div.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
         }
