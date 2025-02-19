@@ -27,29 +27,41 @@ function addToReadList(book) {
 function updateBookStatusToRead(book){
     var url = "http://localhost:8000/updateBookStatusToRead"
     sendPost(url, book);
-    refreshPageBooksToRead();
-
-
+    removeBookFromReadingView(book);
 }
 
 function updateBookStatusToReading(book){
     var url = "http://localhost:8000/updateBookStatusToReading"
     sendPost(url, book);
-    refreshPageBooksRead();
+    removeBookFromReadView(book);
     
 }
 
 function removeBookFromReadList(book){
     var url = "http://localhost:8000/removeBookReadList"
     sendPost(url, book);
-    refreshPageBooksRead();
+    removeBookFromReadView(book);
 }
 
 function removeBookFromReadingList(book){
     var url = "http://localhost:8000/removeBookReadingList"
     sendPost(url, book);
-    refreshPageBooksToRead();
+    removeBookFromReadingView(book);
     
+}
+
+function removeBookFromReadView(book){
+    let div = document.getElementById(book.idBook)
+    if(div){
+        div.remove()
+    }
+}
+
+function removeBookFromReadingView(book){
+    let div = document.getElementById(book.idBook)
+    if(div){
+        div.remove()
+    }
 }
 
 function refreshPageBooksToRead(){
@@ -85,6 +97,7 @@ function addInformationsInView(nameDiv, data){
 
     data.forEach(book => {
         const bookCard = document.createElement('div');
+        bookCard.id = book.idBook;
         bookCard.className = 'book-card bg-white p-4 rounded-lg shadow-md mb-4';
 
         // Título
