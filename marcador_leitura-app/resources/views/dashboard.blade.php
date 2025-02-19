@@ -55,5 +55,7 @@
         const addNewBookRoute = @json(route('addNewBook'));
         const addBookToReadingListRoute = @json(route('addBookToReadingList'));
         const addBookToReadListRoute = @json(route('addBookToReadList'));
+        const updateRead = @json(route('updateBookStatusToReading'));
+        const updateReading = @json(route('updateBookStatusToRead'));
     </script>
 </x-app-layout>

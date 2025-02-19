@@ -24,27 +24,42 @@ function addToReadList(book) {
     sendPost(addBookToReadListRoute, book);
 }
 
+function updateBookStatusToRead(book){
+    var url = "http://localhost:8000/updateBookStatusToRead"
+    sendPost(url, book);
+    refreshPageBooksToRead();
+
+
+}
+
+function updateBookStatusToReading(book){
+    var url = "http://localhost:8000/updateBookStatusToReading"
+    sendPost(url, book);
+    refreshPageBooksRead();
+    
+}
+
 function removeBookFromReadList(book){
     var url = "http://localhost:8000/removeBookReadList"
     sendPost(url, book);
-    refreshPageAfterDeleteReadList();
+    refreshPageBooksRead();
 }
 
 function removeBookFromReadingList(book){
     var url = "http://localhost:8000/removeBookReadingList"
     sendPost(url, book);
-    refreshPageAfterDeleteReadingList();
+    refreshPageBooksToRead();
     
 }
 
-function refreshPageAfterDeleteReadingList(){
+function refreshPageBooksToRead(){
     const url = `/booksToRead`; // Rota com query parameter
     const bookResultsDiv = document.getElementById('bookResults');
     sendGet(url, bookResultsDiv)
 
 }
 
-function refreshPageAfterDeleteReadList(){
+function refreshPageBooksRead(){
     const url = `/booksRead`; // Rota com query parameter
     const bookResultsDiv = document.getElementById('bookResults');
     sendGet(url, bookResultsDiv)   
@@ -53,14 +68,14 @@ function refreshPageAfterDeleteReadList(){
 document.addEventListener("DOMContentLoaded", function () {
     let pageName = window.location.pathname.split("/").pop();
     if (pageName === "getBooksToRead") {
-        refreshPageAfterDeleteReadingList()
+        refreshPageBooksToRead();
     }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
     let pageName = window.location.pathname.split("/").pop();
     if (pageName === "getBooksRead") {
-        refreshPageAfterDeleteReadList()
+        refreshPageBooksRead();
     }
 });
 
@@ -118,13 +133,13 @@ function addInformationsInView(nameDiv, data){
         }
         else if (pageName === "getBooksToRead"){
             firstButton.textContent = 'Mover para a lista de Lidos';
-            firstButton.onclick = () => addToReadList(book);
+            firstButton.onclick = () => updateBookStatusToRead(book);
             secondButton.textContent = 'Remover da lista';
             secondButton.onclick = () => removeBookFromReadingList(book);
         }
         else{
             firstButton.textContent = 'Mover para a lista de Livros para ler';
-            firstButton.onclick = () => addToReadList(book);
+            firstButton.onclick = () => updateBookStatusToReading(book);
             secondButton.textContent = 'Remover da lista';
             secondButton.onclick = () => removeBookFromReadList(book);
         }
@@ -180,17 +195,7 @@ function sendPost(route, book){
     })
     .then(data => {
         if (data.length > 0) {
-            //addInformationsInView(div,data)
-            const jsonString = JSON.stringify(data, null, 2);
-
-            // Cria um Blob a partir da string JSON
-            const blob = new Blob([jsonString], { type: 'application/json' });
-        
-            // Cria uma URL para o Blob
-            const url = URL.createObjectURL(blob);
-        
-            // Abre a URL em uma nova guia
-            //window.open(url, '_blank');
+            console.log("deu certo")
         } else {
             div.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
         }

@@ -85,4 +85,20 @@ class BookUserController extends Controller
         return response()->json("deu boa");
         
     }
+
+    public function updateBookStatusToReading(Request $request){
+        $userID = auth()->user()->id;
+        $bookUser = BookUser::where("id_user",$userID)->where("id_book",$request->idBook)->first();
+        $bookUser->status = "Reading";
+        $bookUser->save();
+        return response()->json($bookUser);
+    }
+
+    public function updateBookStatusToRead(Request $request){
+        $userID = auth()->user()->id;
+        $bookUser = BookUser::where("id_user",$userID)->where("id_book",$request->idBook)->first();
+        $bookUser->status = "Read";
+        $bookUser->save();
+        return response()->json($bookUser);
+    }
 }
