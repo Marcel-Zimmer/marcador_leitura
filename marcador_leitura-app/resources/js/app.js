@@ -1,16 +1,20 @@
 import './bootstrap';
 
-document.getElementById('searchForm').addEventListener('submit', function (e) {
+document.getElementById('searchForm').addEventListener('submit', async function (e) {
     e.preventDefault(); 
     const bookResultsDiv = document.getElementById('bookResults');
     const query = document.getElementById('searchInput').value; 
-    if(query.trim().length === 0){
-        bookResultsDiv.innerHTML = '<p class="text-gray-500">Por favor digite o nome de um livro.</p>';
+
+    if(query.trim().length !== 0){
+        const url = `/searchBook?q=${encodeURIComponent(query)}`;
+        let listBooks = await sendGet(url);
+        console.log(listBooks)
+        addInformationsInView(bookResultsDiv,listBooks)        
     }
     else{
-        const url = `/searchBook?q=${encodeURIComponent(query)}`;
-        sendGet(url,bookResultsDiv)
+        bookResultsDiv.innerHTML = '<p class="text-gray-500">Por favor digite o nome de um livro.</p>';
     }
+    
 });
 
 
@@ -94,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function addInformationsInView(nameDiv, data){
     nameDiv.innerHTML = '';
-
     data.forEach(book => {
         const bookCard = document.createElement('div');
         bookCard.id = book.idBook;
@@ -166,29 +169,22 @@ function addInformationsInView(nameDiv, data){
 
 }
 
-function sendGet(url,div){
-    fetch(url, {
-        method: 'GET', 
-        headers: {
-            'Accept': 'application/json', 
-        }
-    })
-    .then(response => {
+async function sendGet(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
         if (!response.ok) {
             throw new Error('Erro na requisição: ' + response.statusText);
         }
-        return response.json(); 
-    })
-    .then(data => {
-        if (data.length > 0) {
-            addInformationsInView(div,data)
-        } else {
-            div.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
-        }
-    })
-        .catch(error => {
-            console.error('Erro:', error); 
-        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erro:', error);
+    }
 }
 
 function sendPost(route, book){
