@@ -199,10 +199,10 @@ function sendPost(route, book){
         body: JSON.stringify(book) 
     })
     .then(response => {
-        console.log(response.success)
         return response.json(); 
     })
     .then(data => {
+        console.log(data.success)
         if (data.length > 0) {
             console.log("deu certo")
         } else {

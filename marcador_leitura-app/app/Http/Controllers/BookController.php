@@ -26,7 +26,6 @@ class BookController extends Controller
             return response()->json([
             'success' => true,
             'message' => 'Livro salvo com sucesso',
-            'data' => $book 
         ], 201);
         }
         catch (\Exception $e){
