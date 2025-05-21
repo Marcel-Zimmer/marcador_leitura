@@ -19,13 +19,15 @@ document.getElementById('searchForm').addEventListener('submit', async function 
 
 
 function addToReadingList(book) {
-    sendPost(addNewBookRoute,book);
-    sendPost(addBookToReadingListRoute, book);
+    var url = "http://localhost:8000/addNewBook"
+    sendPost(url,book);
+    //sendPost(addBookToReadingListRoute, book);
 }
 
 function addToReadList(book) {
-    sendPost(addNewBookRoute, book);
-    sendPost(addBookToReadListRoute, book);
+    var url = "http://localhost:8000/addNewBook"
+    sendPost(url, book);
+    //sendPost(addBookToReadListRoute, book);
 }
 
 function updateBookStatusToRead(book){
@@ -197,9 +199,7 @@ function sendPost(route, book){
         body: JSON.stringify(book) 
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro na requisição: ' + response.statusText);
-        }
+        console.log(response.success)
         return response.json(); 
     })
     .then(data => {

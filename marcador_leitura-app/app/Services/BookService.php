@@ -3,6 +3,7 @@
 namespace App\services;
 use App\Models\Book;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
   
 class BookService{
     private $urlTitle = 'https://www.googleapis.com/books/v1/volumes?q=intitle:'; //url para pesquisa na api do google 
@@ -17,15 +18,18 @@ class BookService{
         
         $searchQuery = $this->urlTitle . $title .$this->filterPortuguese.$this->keyApi.$this->maxResult;
         $response = Http::get($searchQuery);
-        if($response->successful()){
-            $items = $response->json('items') ?? [];
-            return array_map(fn($item) => Book::fromGoogleBooks($item), $items);
+        if(!$response->successful()){
+            throw new Exception("erro ao carregar os livros");
         }
-        return response()->json("deu ruim");
+        $items = $response->json('items') ?? [];
+        return array_map(fn($item) => Book::fromGoogleBooks($item), $items);
     }
 
-    public function saveBook(Book $book){
-
+    public function saveBook(Request $request){
+        if ($request->has('idBook') && Book::find($request->idBook)) {
+            return; 
+        }
+        Book::create($request->all());   
     }
 
 }

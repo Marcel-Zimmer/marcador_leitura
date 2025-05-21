@@ -21,17 +21,19 @@ class BookController extends Controller
         }
     
     public function addNewBook(Request $request){
-
-        $book = $this->booksService->saveBook($request);
-        if($book){
-            return response()->json("livro ja registrado");    
+        try{
+            $this->booksService->saveBook($request);
+            return response()->json([
+            'success' => true,
+            'message' => 'Livro salvo com sucesso',
+            'data' => $book 
+        ], 201);
         }
-        else{
-            $newbook = new Book();
-            $newbook->fill($request->all());            
-            $newbook -> save();
-            return response()->json($newbook);
-            
+        catch (\Exception $e){
+            return response()->json([
+            'success' => false,
+            'message' => 'Não foi possível salvar o livro',
+        ], 500);
         }
     }
 }
