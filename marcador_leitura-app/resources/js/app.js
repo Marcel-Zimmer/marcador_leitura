@@ -1,16 +1,18 @@
 import './bootstrap';
 
+
+//listenet do botão procurar livros 
 document.getElementById('searchForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); 
+    e.preventDefault();
     const bookResultsDiv = document.getElementById('bookResults');
     const query = document.getElementById('searchInput').value; 
 
     if(query.trim().length !== 0){
         const url = `/searchBook?q=${encodeURIComponent(query)}`;
         let listBooks = await sendGet(url);
-        console.log(listBooks)
         addInformationsInView(bookResultsDiv,listBooks)        
     }
+
     else{
         bookResultsDiv.innerHTML = '<p class="text-gray-500">Por favor digite o nome de um livro.</p>';
     }
@@ -19,15 +21,17 @@ document.getElementById('searchForm').addEventListener('submit', async function 
 
 
 function addToReadingList(book) {
-    var url = "http://localhost:8000/addNewBook"
-    sendPost(url,book);
-    //sendPost(addBookToReadingListRoute, book);
+    const url = "http://localhost:8000/markBookToReadingList"
+    const respost = sendPost(url,book);
+
+    if(respost.success) sendPost(addBookToReadingListRoute, book);
 }
 
 function addToReadList(book) {
-    var url = "http://localhost:8000/addNewBook"
-    sendPost(url, book);
-    //sendPost(addBookToReadListRoute, book);
+    const url = "http://localhost:8000/markBookToReadList"
+    const respost = sendPost(url, book);
+
+    if(refreshPageBooksToRead.success) sendPost(addBookToReadListRoute, book);
 }
 
 function updateBookStatusToRead(book){
@@ -202,12 +206,14 @@ function sendPost(route, book){
         return response.json(); 
     })
     .then(data => {
-        console.log(data.success)
+        return data;
+        /*
         if (data.length > 0) {
             console.log("deu certo")
         } else {
             div.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
         }
+        */
     })
         .catch(error => {
             console.error('Erro:', error); 

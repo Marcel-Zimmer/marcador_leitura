@@ -27,9 +27,10 @@ class BookService{
 
     public function saveBook(Request $request){
         if ($request->has('idBook') && Book::find($request->idBook)) {
-            return; 
+            return $request->idBook; 
         }
-        Book::create($request->all());   
+        $book = Book::create($request->all()); 
+        return $book -> idBook;  
     }
 
 }
