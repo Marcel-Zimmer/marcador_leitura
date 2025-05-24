@@ -6,7 +6,9 @@ use App\Http\Controllers\BookUserController;
 
 
 route::get('/searchBook/', [BookController::class, 'serchaBookByName'])->name('searchBook');
-route::post('/addNewBook/', [BookController::class,'addNewBook'])->name('addNewBook');
+route::post('/markBookToReadingList/', [BookController::class,'markBookToReadingList'])->name('markBookToReadingList');
+
+
 route::post('/addBookToReadList/', [BookUserController::class,'addBookToReadList'])->name('addBookToReadList');
 route::post('/addBookToReadingList/', [BookUserController::class,'addBookToReadingList'])->name('addBookToReadingList');
 route::get('/booksToRead/', [BookUserController::class,'getBooksToRead'])->name('booksToRead');
@@ -16,6 +18,9 @@ route::post('/removeBookReadingList/', [BookUserController::class,'removeBookRea
 route::post('/updateBookStatusToReading/', [BookUserController::class,'updateBookStatusToReading'])->name('updateBookStatusToReading');
 route::post('/updateBookStatusToRead/', [BookUserController::class,'updateBookStatusToRead'])->name('updateBookStatusToRead');
 
+Route::get('/get-csrf-token', function() {
+    return response()->json(['token' => csrf_token()]);
+});
 route::view('getBooksToRead','booksToRead')
     ->middleware(['auth', 'verified'])
     ->name('getBooksToRead');

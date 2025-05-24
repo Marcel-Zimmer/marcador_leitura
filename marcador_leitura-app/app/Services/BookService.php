@@ -26,11 +26,13 @@ class BookService{
     }
 
     public function saveBook(Request $request){
-        if ($request->has('idBook') && Book::find($request->idBook)) {
-            return $request->idBook; 
+        $existingBook = Book::where('id_google_books', $request->id_google_books)->first();
+        if ($existingBook) {
+            return $existingBook; 
         }
-        $book = Book::create($request->all()); 
-        return $book -> idBook;  
+        $newBook = new Book($request -> all());
+        $newBook->save(); 
+        return $newBook -> id;  
     }
 
 }

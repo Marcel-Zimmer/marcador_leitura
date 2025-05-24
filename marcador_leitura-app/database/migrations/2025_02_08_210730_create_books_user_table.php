@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
-            $table->string('id_book');
-            $table->foreign('id_book')->references('idBook')->on('books')->onDelete('cascade');
+            $table->foreignId('id_book')->constrained('books')->onDelete('cascade');
             $table->integer('note');
             $table->string('status');
             $table->text('resume');

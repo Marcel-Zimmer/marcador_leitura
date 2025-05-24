@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Services\BookService;
+use App\Services\BookUserService;
 
 class BookController extends Controller
 {   
@@ -30,23 +31,22 @@ class BookController extends Controller
             'message' => 'Não foi possível buscar o livro',
         ], 500);
         }
-
     }
     
     public function markBookToReadingList(Request $request){
         try{
-            $idBook = $this->bookService->saveBook($request);
-            $this->bookUserService -> markBookToReadingList(auth()->id(), $idBook);
-            
+            $book = $this->bookService->saveBook($request);
+            $teste = $this->bookUserService -> markBookToReadingList($book -> id);
             return response()->json([
             'success' => true,
-            'message' => 'Livro salvo com sucesso',
+            'message' => $teste,
         ], 201);
         }
         catch (\Exception $e){
             return response()->json([
             'success' => false,
-            'message' => 'Não foi possível salvar o livro',
+            'message' => 'Não foi possível salvar o livro erro: '.$e,
+
         ], 500);
         }
     }

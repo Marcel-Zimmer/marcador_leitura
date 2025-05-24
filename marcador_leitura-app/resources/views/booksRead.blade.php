@@ -49,9 +49,4 @@
     <div id="bookResults" class="mt-6">
         
     </div>
-    <script>
-        const addNewBookRoute = @json(route('addNewBook'));
-        const addBookToReadingListRoute = @json(route('addBookToReadingList'));
-        const addBookToReadListRoute = @json(route('addBookToReadList'));
-    </script>
 </x-app-layout>

@@ -1,4 +1,6 @@
 import './bootstrap';
+import {toastr} from 'toastr';
+window.toastr = toastr;
 
 
 //listenet do botão procurar livros 
@@ -10,7 +12,7 @@ document.getElementById('searchForm').addEventListener('submit', async function 
     if(query.trim().length !== 0){
         const url = `/searchBook?q=${encodeURIComponent(query)}`;
         let listBooks = await sendGet(url);
-        addInformationsInView(bookResultsDiv,listBooks)        
+        addInformationsInView(bookResultsDiv,listBooks.data)        
     }
 
     else{
@@ -22,9 +24,18 @@ document.getElementById('searchForm').addEventListener('submit', async function 
 
 function addToReadingList(book) {
     const url = "http://localhost:8000/markBookToReadingList"
+    console.log(book)
     const respost = sendPost(url,book);
+    console.log(respost)
+    if(respost.success){
+        window.dispatchEvent(new CustomEvent('toast', {
+        detail: {
+            message: 'Livro adicionado a Lista de leitura',
+            type: 'success'
+            }
+        }));
+    }
 
-    if(respost.success) sendPost(addBookToReadingListRoute, book);
 }
 
 function addToReadList(book) {
@@ -193,29 +204,24 @@ async function sendGet(url) {
     }
 }
 
-function sendPost(route, book){
-    fetch(route, {  
-        method: 'POST',  
-        headers: {
-            'Content-Type': 'application/json', 
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  
-        },
-        body: JSON.stringify(book) 
-    })
-    .then(response => {
-        return response.json(); 
-    })
-    .then(data => {
-        return data;
-        /*
-        if (data.length > 0) {
-            console.log("deu certo")
-        } else {
-            div.innerHTML = '<p class="text-gray-500">Nenhum livro encontrado.</p>';
-        }
-        */
-    })
-        .catch(error => {
-            console.error('Erro:', error); 
-        });
+async function sendPost(route, book){
+    try{
+        const response = await fetch(route, {  
+                         method: 'POST',  
+                         headers: {
+                            'Content-Type': 'application/json', 
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  
+                        },
+                        body: JSON.stringify(book) 
+                    });
+        if (!response.ok) {
+            throw new Error('Erro na requisição: ' + response.statusText);
+        }     
+        const data = await response.json();
+        return data;                       
+    }catch(error){
+        console.log(error)
+    }
+
 }
+

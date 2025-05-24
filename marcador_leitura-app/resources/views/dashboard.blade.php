@@ -49,13 +49,24 @@
     <div id="bookResults" class="mt-6">
         
     </div>
-    <script>
-        const deleteBookFromReadList = @json(route('removeBookReadList'));
-        const deleteBookFromReadingList = @json(route('removeBookReadingList'));
-        const addNewBookRoute = @json(route('addNewBook'));
-        const addBookToReadingListRoute = @json(route('addBookToReadingList'));
-        const addBookToReadListRoute = @json(route('addBookToReadList'));
-        const updateRead = @json(route('updateBookStatusToReading'));
-        const updateReading = @json(route('updateBookStatusToRead'));
-    </script>
 </x-app-layout>
+
+<div x-data="{ show: false, message: '', type: '' }" 
+     x-show="show"
+     x-transition
+     x-init="
+        window.addEventListener('toast', event => {
+            message = event.detail.message;
+            type = event.detail.type;
+            show = true;
+            setTimeout(() => show = false, 3000);
+        });
+     "
+     class="fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg"
+     :class="{
+         'bg-green-500': type === 'success',
+         'bg-red-500': type === 'error',
+         'bg-blue-500': type === 'info'
+     }">
+    <span x-text="message"></span>
+</div
