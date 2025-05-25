@@ -1,17 +1,35 @@
 <?php
 
-namespace App\services;
+namespace App\Services;
 use App\Models\BookUser;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
   
 class BookUserService{
+
     public function markBookToReadingList(int $idBook){
-        $book = new BookUser();
-        $book ->id_book = $idBook;
-        $book ->id_user = auth()->id();
-        $book ->status= "READING";
-        $book->save();
-        return $book;
+        return BookUser::updateOrCreate(
+            ['id_book' => $idBook, 'id_user' => auth()->id()],
+            ['status' => 'READING']
+        );
+    }
+
+    public function markBookToReadList(int $idBook){
+        return BookUser::updateOrCreate(
+            ['id_book' => $idBook, 'id_user' => auth()->id()],
+            ['status' => 'FINISHED']
+        );
+    }
+    public function getBooksNotFinished(){
+        return BookUser::where('id_user', auth()->id())
+                     ->where('status', 'READING')
+                     ->pluck('id')
+                     ->toArray();
+    }
+
+    public function getBooksFinished(){
+        return BookUser::where('id_user', auth()->id())
+                     ->where('status', 'FINISHED')
+                     ->pluck('id')
+                     ->toArray();
     }
 }
+

@@ -6,8 +6,11 @@ use App\Http\Controllers\BookUserController;
 
 
 route::get('/searchBook/', [BookController::class, 'serchaBookByName'])->name('searchBook');
-route::post('/markBookToReadingList/', [BookController::class,'markBookToReadingList'])->name('markBookToReadingList');
+route::get('/getBooksNotFinished/', [BookController::class, 'getBooksNotFinished'])->name('getBooksNotFinished');
+route::get('/getBooksFinished/', [BookController::class, 'getBooksFinished'])->name('getBooksFinished');
 
+route::post('/markBookToReadingList/', [BookController::class,'markBookToReadingList'])->name('markBookToReadingList');
+route::post('/markBookToReadList/', [BookController::class,'markBookToReadList'])->name('markBookToReadList');
 
 route::post('/addBookToReadList/', [BookUserController::class,'addBookToReadList'])->name('addBookToReadList');
 route::post('/addBookToReadingList/', [BookUserController::class,'addBookToReadingList'])->name('addBookToReadingList');

@@ -9,45 +9,84 @@ use App\Services\BookUserService;
 
 class BookController extends Controller
 {   
-    private $bookService;
-    private $bookUserService;
 
-    public function __construct(BookService $bookService, BookUserService $bookUserService){
-        $this->bookService = $bookService;
-        $this->bookUserService = $bookUserService;
-    }
+    public function __construct(
+        protected BookService $bookService,
+        protected BookUserService $bookUserService
+    ) {}
 
 
     public function serchaBookByName(Request $request){  
         try{
             $data = $this->bookService->searchBooksByTitle($request->input('q'));
             return response()->json([
-            'success' => true,
-            'data' => $data], 201);
+                'success' => true,
+                'data' => $data], 201);
 
         }catch (\Exception $e){
             return response()->json([
-            'success' => false,
-            'message' => 'Não foi possível buscar o livro',
-        ], 500);
+                'success' => false,
+                'message' => 'Não foi possível buscar o livro',], 500);
         }
     }
     
     public function markBookToReadingList(Request $request){
         try{
-            $book = $this->bookService->saveBook($request);
-            $teste = $this->bookUserService -> markBookToReadingList($book -> id);
+            $bookId = $this->bookService->saveBook($request);
+            $this->bookUserService -> markBookToReadingList($bookId);
             return response()->json([
-            'success' => true,
-            'message' => $teste,
+                'success' => true,
+                'message' => $bookId,
         ], 201);
         }
         catch (\Exception $e){
             return response()->json([
-            'success' => false,
-            'message' => 'Não foi possível salvar o livro erro: '.$e,
-
-        ], 500);
+                'success' => false,
+                'message' => 'Não foi possível salvar o livro erro: '.$e,], 500);
         }
     }
+
+    public function markBookToReadList(Request $request){
+        try{
+            $bookId = $this->bookService->saveBook($request);
+            $this->bookUserService -> markBookToReadList($bookId);
+            return response()->json([
+                'success' => true,
+                'message' => $bookId], 201);
+        }
+        catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi possível salvar o livro erro: '.$e,], 500);
+        }
+    }
+    public function getBooksFinished(){
+        try{
+            $idsBooks = $this-> bookUserService -> getBooksFinished();
+            $books = $this -> bookService -> getBooks($idsBooks);
+            return response()->json([
+                'success' => true,
+                'data' => $books ], 201);    
+
+        }catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi possível salvar o livro erro: '.$e,], 500);
+        }
+    }  
+
+    public function getBooksNotFinished(){
+        try{
+            $idsBooks = $this-> bookUserService -> getBooksNotFinished();
+            $books = $this -> bookService -> getBooks($idsBooks);
+            return response()->json([
+                'success' => true,
+                'data' => $books ], 201);    
+
+        }catch(\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi possível salvar o livro erro: '.$e,], 500);
+        }
+    }       
 }

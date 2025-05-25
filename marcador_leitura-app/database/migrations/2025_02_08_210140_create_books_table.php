@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id('id');
-            $table -> string('id_google_books');
-            $table ->string('title');
-            $table->string('authors');
-            $table->string('publisher');
-            $table->string('publishedDate');
-            $table->text('description');
-            $table->integer('pageCount');
-            $table->string('categories');
-            $table->string('smallThumbnail');
-            $table->string('thumbnail');
-            $table->string('language');
-            $table->float('price');
-            $table->string('currencyCode');
+            $table ->string('id_google_books')->nullable();
+            $table ->string('title')->nullable();
+            $table->string('authors')->nullable();
+            $table->string('publisher')->nullable();
+            $table->string('publishedDate')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('pageCount')->nullable();
+            $table->string('categories')->nullable();
+            $table->string('smallThumbnail')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('language')->nullable();
+            $table->float('price')->nullable();
+            $table->string('currencyCode')->nullable();
             $table->timestamps();
         });
     }

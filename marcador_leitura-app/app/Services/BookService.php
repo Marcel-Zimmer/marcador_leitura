@@ -1,7 +1,8 @@
 <?php
 
-namespace App\services;
+namespace App\Services;
 use App\Models\Book;
+use App\Models\UserBook;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
   
@@ -28,11 +29,15 @@ class BookService{
     public function saveBook(Request $request){
         $existingBook = Book::where('id_google_books', $request->id_google_books)->first();
         if ($existingBook) {
-            return $existingBook; 
+            return $existingBook -> id; 
         }
         $newBook = new Book($request -> all());
         $newBook->save(); 
-        return $newBook -> id;  
+        return $newBook -> id;   
+    }
+
+    public function getBooks(array $ids){
+        return Book::whereIn('id', $ids)->get();
     }
 
 }

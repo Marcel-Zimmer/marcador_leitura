@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class BookUserController extends Controller
 {
+
     //função para adicionar um livro a lista de livros a ler
     public function addBookToReadingList(Request $request){ 
         $userID = auth()->user()->id; //recebe o id do usuário logado pelo laravel 
@@ -60,7 +61,7 @@ class BookUserController extends Controller
     //função que busca no banco de dados todos os livros que o usuário já leu 
     public function getBooksRead(){
         $userID = auth()->user()->id;
-        $ListBookUser = BookUser::where('id_user', $userID)->where('status','Read')->get();
+        $ListBookUser = BookUser::select('id')->where('id_user', $userID)->where('status','Read')->get();
         $books = [];
         foreach ($ListBookUser as $BookUser) {
             $newBook = Book::find($BookUser->id_book);
